@@ -64,7 +64,7 @@ FusedHE is a deep learning model designed to estimate height information from si
   - **MIT Pretrained Parameters**: `mit_b4.pth` (used for the Vision Transformer encoder, can be used during training)
   - **Trained Parameters on DataFusion Contest 2023 Dataset**: `FusedSeg-HE.ckpt` (FusedSeg-HE parameters, can be used for inference data)
 
-    Dowload link: https://drive.google.com/file/d/1FeX67612TZtzazPOJzqjkT-nweoJ2p-f/view?usp=drive_link
+    Dowload link: https://drive.google.com/drive/folders/1EwmFM0zHENQGPiMemXfe9W97qUKsyLhG?usp=drive_link
   
 ### 3. Training the model:
   - To train FusedSeg-HE on your dataset, run:
