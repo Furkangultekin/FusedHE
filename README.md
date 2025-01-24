@@ -14,13 +14,13 @@ FusedHE is a deep learning model designed to estimate height information from si
 
 ## Installation
 
-1. **Clone the Repository**:
+### 1.Clone the Repository:
   ```bash
   git clone https://github.com/Furkangultekin/FusedHE.git
   cd FusedHE
   ```
-2. **Set Up the Environment**:
-  - It's recommended to use a virtual environment to manage dependencies.
+### 2. Set Up the Environment:
+  - It's recommended to use a virtual environment to manage dependencies using Python 3.10.11.
   - Install the required packages:
   ```bash
   pip install -r requirements.txt
@@ -28,7 +28,7 @@ FusedHE is a deep learning model designed to estimate height information from si
 
 ## Usage
 
-1. **Prepare your data**:
+### 1. Prepare your data:
   - Ensure your 512x512 monoscopic satellite images and ground truths are organized in a directory.
   - Example dataset structure:
     ```bash
@@ -58,7 +58,7 @@ FusedHE is a deep learning model designed to estimate height information from si
     > 
     > **Naming Convention**: Each input image in the `rgb/` folder must have a corresponding ground truth file in the `dsm/` folder with the same name (e.g., `image_001.tif` in `rgb/` matches `image_001.tif` in `dsm/`).
 
-2. **Download the checkpoints**:
+### 2. Download the checkpoints:
    
     You will need to download the following model checkpoints to run the project:
   - **MIT Pretrained Parameters**: `mit_b4.pth` (used for the Vision Transformer encoder, can be used during training)
@@ -66,17 +66,19 @@ FusedHE is a deep learning model designed to estimate height information from si
 
     Dowload link: https://drive.google.com/file/d/1FeX67612TZtzazPOJzqjkT-nweoJ2p-f/view?usp=drive_link
   
-3. **Training the model**:
+### 3. Training the model:
   - To train FusedSeg-HE on your dataset, run:
+    
   ```bash
-  python .\main.py --train_dir path/to/train/folder --val_dir path/to/validation/folder --mit_ckpt_path path/to/mit_b4.pth
+  python main.py --train_dir /path/to/train/folder --val_dir /path/to/validation/folder --mit_ckpt_path /path/to/mit_b4.pth
   ```
-    Adjust the parameters as needed.
 
-4. **Inference**:
-    For height estimation on new images:
+  > Adjust the parameters as needed.
+
+### 4. Inference:
+   For height estimation on new images:
   ```bash
-python .\inference.py --ckpt_path path/to/FusedSegHE.ckpt
+  python .\inference.py --ckpt_path path/to/FusedSegHE.ckpt
   ```
 
 ## Parameters for training
