@@ -20,6 +20,45 @@ FusedHE is a deep learning model designed to estimate height information from si
   cd FusedHE
   ```
 2. **Set Up the Environment**:
+  - It's recommended to use a virtual environment to manage dependencies.
+  - Install the required packages:
   ```bash
   pip install -r requirements.txt
   ```
+
+## Usage
+
+1. **Prepare your data**:
+  - Ensure your 512x512 monoscopic satellite images and ground truths are organized in a directory.
+  - Example dataset structure:
+    ```bash
+    .
+    ├── dfc2023/                             # dataset main folder
+         ├── train/                          # training dataset folder
+         │    ├── rgb                        # input image folder
+         │    │    ├── image_1.tif          
+         │    │    ├── image_2.tif
+         │    │    └── ....
+         │    ├── dsm                        #ground truth nDSM folder
+         │    │    ├── image_1.tif
+         │    │    ├── image_2.tif
+         │    │    └── ....
+         └── validation/                     #validation data folder
+              ├── rgb
+              │    ├── image_1.tif
+              │    ├── image_2.tif
+              │    └── ....
+              └── dsm
+                   ├── image_1.tif
+                   ├── image_2.tif
+                   └── ....          
+
+    ```
+    
+
+
+
+
+
+
+
