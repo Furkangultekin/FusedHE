@@ -54,8 +54,32 @@ FusedHE is a deep learning model designed to estimate height information from si
                    └── ....          
 
     ```
-    
+    > **Note that**: Currently input folder name must be 'rgb' and and ground truth folder name must be 'dsm'.
+    > 
+    > **Naming Convention**: Each input image in the `rgb/` folder must have a corresponding ground truth file in the `dsm/` folder with the same name (e.g., `image_001.tif` in `rgb/` matches `image_001.tif` in `dsm/`).
 
+2. **Download the checkpoints**:
+   
+    You will need to download the following model checkpoints to run the project:
+  - **MIT Pretrained Parameters**: `mit_b4.pth` (used for the Vision Transformer encoder, can be used during training)
+  - **Trained Parameters on DataFusion Contest 2023 Dataset**: `FusedSeg-HE.ckpt` (FusedSeg-HE parameters, can be used for inference data)
+
+    Dowload link: https://drive.google.com/file/d/1FeX67612TZtzazPOJzqjkT-nweoJ2p-f/view?usp=drive_link
+  
+3. **Training the model**:
+  - To train FusedSeg-HE on your dataset, run:
+  ```bash
+  python .\main.py --train_dir path/to/train/folder --val_dir path/to/validation/folder --mit_ckpt_path path/to/mit_b4.pth
+  ```
+    Adjust the parameters as needed.
+
+4. **Inference**:
+    For height estimation on new images:
+  ```bash
+python .\inference.py --ckpt_path path/to/FusedSegHE.ckpt
+  ```
+
+## Parameters for training
 
 
 
