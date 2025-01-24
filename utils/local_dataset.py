@@ -19,7 +19,7 @@ warnings.filterwarnings("ignore")
 
 class LocalDataset(Dataset):
 
-    def __init__(self, root_dir, args, transform=False,inference=False):
+    def __init__(self, root_dir, args, transform=False,):
         """
         Args:
             root_dir (string): Directory with all the images.
@@ -41,7 +41,6 @@ class LocalDataset(Dataset):
                             #NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
                             ]
         self.to_tensor = T.ToTensor()
-        self.inference = inference
 
     def __len__(self):
         return len(os.listdir(os.path.join(self.root_dir,"rgb/")))
@@ -55,51 +54,36 @@ class LocalDataset(Dataset):
 
         upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=False)
 
-        if self.inference:
-            image = self.to_tensor(image)
-            nan_in = torch.isnan(image)
-            image[nan_in] = self.min_height
+        gt_dir = os.path.join(self.root_dir,"dsm/")
+        gt_name = os.path.join(gt_dir,os.listdir(gt_dir)[idx])
+        depth = cv2.imread(gt_name, cv2.IMREAD_UNCHANGED)# .astype('float32')
+        segment = np.empty(depth.shape)
+        
+        additional_targets = {'depth': 'mask'}
+        
+        image = self.to_tensor(image)
+        depth = self.to_tensor(depth)# .squeeze()
+        segment = np.ones(depth.shape,dtype=np.float32)
+        segment = torch.tensor(segment)
 
-            inf_in = torch.isinf(image)
-            image[inf_in] = self.min_height
-            data = {"image": image,
-                    #"geo": {"xsize":xsize,
-                    #        "ysize":ysize,
-                    #        "geo_trans":geo_trans,
-                    #        "projection":projection},
-                    "fname": img_name      
-                    }
-        else:
-            gt_dir = os.path.join(self.root_dir,"dsm/")
-            gt_name = os.path.join(gt_dir,os.listdir(gt_dir)[idx])
-            depth = cv2.imread(gt_name, cv2.IMREAD_UNCHANGED)# .astype('float32')
-            segment = np.empty(depth.shape)
-            
-            additional_targets = {'depth': 'mask'}
-            
-            image = self.to_tensor(image)
-            depth = self.to_tensor(depth)# .squeeze()
-            segment = np.ones(depth.shape,dtype=np.float32)
-            segment = torch.tensor(segment)
+        nan_ind = torch.isnan(depth)
+        depth[nan_ind] = self.min_height
+        inf_in = torch.isinf(depth)
+        depth[inf_in] = self.min_height
+        gt_ind = depth<=0.9
+        depth[gt_ind] = self.min_height
 
-            nan_ind = torch.isnan(depth)
-            depth[nan_ind] = self.min_height
-            inf_in = torch.isinf(depth)
-            depth[inf_in] = self.min_height
-            gt_ind = depth<=0.9
-            depth[gt_ind] = self.min_height
+        segment[gt_ind] =0 
 
-            segment[gt_ind] =0 
-
-            data = {"image": image,
-                    "depth": depth/self.max_height ,
-                    "segment": segment,
-                    #"geo": {"xsize":xsize,
-                    #        "ysize":ysize,
-                    #        "geo_trans":geo_trans,
-                    #        "projection":projection},
-                    "fname": img_name      
-                    }
+        data = {"image": image,
+                "depth": depth/self.max_height ,
+                "segment": segment,
+                #"geo": {"xsize":xsize,
+                #        "ysize":ysize,
+                #        "geo_trans":geo_trans,
+                #        "projection":projection},
+                "fname": img_name      
+                }
 
         return data
 
