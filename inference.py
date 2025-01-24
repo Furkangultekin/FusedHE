@@ -30,7 +30,7 @@ def get_args_parser():
     parser.add_argument('--out_channel_decoderb', default=[640, 256, 128], type=list)
                         #mit,fused = [640, 256, 128] - conv = [512, 256, 128]
     parser.add_argument('--out_decoder', default=64, type=int)
-    parser.add_argument('--device', default='cpu',
+    parser.add_argument('--device', default='cuda:0',
                         help='device to use for training / testing')
     parser.add_argument('--max_height_eval', default=185, type=int)
     parser.add_argument('--min_height_eval', default=1e-4, type=float)
