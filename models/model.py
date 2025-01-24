@@ -35,7 +35,7 @@ class FHE(nn.Module):
             self.segment_head = SegmentHead(channels_out=channels_out,num_classes=args.num_classes)
 
         if self.pre_trained and self.enc_opt == 'mit':            
-            ckpt_path = '../checkpoints/mit_b4.pth'
+            ckpt_path = args.mit_ckpt_path
             load_checkpoint(self.encoder, ckpt_path, logger=None)
 
 
@@ -96,7 +96,7 @@ class FusedEncoder(nn.Module):
 
         self.mit = mit_b4()
         if self.pre_trained:            
-            ckpt_path = './mit_b4.pth'
+            ckpt_path = args.mit_ckpt_path
             load_checkpoint(self.mit, ckpt_path, logger=None)
         self.resnet = Resnet(pre_trained=self.pre_trained)
 
