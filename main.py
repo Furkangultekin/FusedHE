@@ -36,8 +36,10 @@ def get_args_parser():
                         help='gradient clipping max norm')
     parser.add_argument('--lambd', default=0,type=float) # coeffitiont of Segmentation Loss
     parser.add_argument('--sgd', action='store_true')
+
     # [depth or full], depth: Only height head, full:height+Segmentation head
     parser.add_argument('--option', default='full', type=str) 
+
     # [mit, conv, fused], Encoder type, mit: Hierarchical Vision transformers, conv: Resnet , Fused:mit+conv
     parser.add_argument('--enc_opt', default='fused', type=str) 
     parser.add_argument('--pre_trained', default=True, type=bool)
@@ -63,7 +65,7 @@ def get_args_parser():
     parser.add_argument('--output_dir', default='output',
                         help='path where to save, empty for no saving')
     
-    parser.add_argument('--device', default='cpu',
+    parser.add_argument('--device', default='cuda:0',
                         help='device to use for training / testing')
     parser.add_argument('--seed', default=42, type=int)
     parser.add_argument('--resume', default='', help='resume from checkpoint')
@@ -128,8 +130,6 @@ def main(args):
 
     model.to(device)
 
-    
-
     best_acc = 100.0
     best_model_wts = copy.deepcopy(model.state_dict())
     all_loss_tra = []
@@ -188,7 +188,7 @@ def main(args):
     torch.save(best_model_wts, os.path.join(args.output_dir,'best.ckpt'))
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser('RoomFormer training script', parents=[get_args_parser()])
+    parser = argparse.ArgumentParser('FusedHE training script', parents=[get_args_parser()])
     args = parser.parse_args()
     now = datetime.datetime.now()
     run_id = now.strftime("%Y-%m-%d-%H-%M-%S")
