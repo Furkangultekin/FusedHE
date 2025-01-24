@@ -18,16 +18,16 @@ import warnings
 warnings.filterwarnings("ignore")
 
 class LocalDataset(Dataset):
-    """Face Landmarks dataset."""
 
-    def __init__(self, root_dir, transform=False,inference=False):
+    def __init__(self, root_dir, args, transform=False,inference=False):
         """
         Args:
-            csv_file (string): Path to the csv file with annotations.
             root_dir (string): Directory with all the images.
             transform (callable, optional): Optional transform to be applied
                 on a sample.
         """
+        self.max_height = args.max_height_eval
+        self.min_height = args.min_height_eval
         self.root_dir = root_dir
         if transform:
             self.transform = [
@@ -58,10 +58,10 @@ class LocalDataset(Dataset):
         if self.inference:
             image = self.to_tensor(image)
             nan_in = torch.isnan(image)
-            image[nan_in] = 0.0001
+            image[nan_in] = self.min_height
 
             inf_in = torch.isinf(image)
-            image[inf_in] = 0.0001
+            image[inf_in] = self.min_height
             data = {"image": image,
                     #"geo": {"xsize":xsize,
                     #        "ysize":ysize,
@@ -74,7 +74,7 @@ class LocalDataset(Dataset):
             gt_name = os.path.join(gt_dir,os.listdir(gt_dir)[idx])
             depth = cv2.imread(gt_name, cv2.IMREAD_UNCHANGED)# .astype('float32')
             segment = np.empty(depth.shape)
-
+            
             additional_targets = {'depth': 'mask'}
             
             image = self.to_tensor(image)
@@ -83,16 +83,16 @@ class LocalDataset(Dataset):
             segment = torch.tensor(segment)
 
             nan_ind = torch.isnan(depth)
-            depth[nan_ind] = 0.0001
+            depth[nan_ind] = self.min_height
             inf_in = torch.isinf(depth)
-            depth[inf_in] = 0.0001 
+            depth[inf_in] = self.min_height
             gt_ind = depth<=0.9
-            depth[gt_ind] = 0.0001
+            depth[gt_ind] = self.min_height
 
             segment[gt_ind] =0 
 
             data = {"image": image,
-                    "depth": depth/185,
+                    "depth": depth/self.max_height ,
                     "segment": segment,
                     #"geo": {"xsize":xsize,
                     #        "ysize":ysize,

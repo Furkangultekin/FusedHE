@@ -9,7 +9,7 @@ metric_name = ['d1', 'd2', 'd3', 'abs_rel_mask', 'abs_rel_mask_3m','abs_rel_mask
 global global_step
 global_step = 0
 
-def train(train_loader, model, criterion_d, optimizer_d ,scheduler, device, epoch, args, option="full"):    
+def train(train_loader, model, criterion_d, optimizer_d , device, epoch, args, option="full"):    
     
     global global_step
 
@@ -43,7 +43,7 @@ def train(train_loader, model, criterion_d, optimizer_d ,scheduler, device, epoc
                             ('Depth Loss: %.4f (%.4f)' %
                             (total_loss.val, total_loss.avg)))
         
-        scheduler.step()
+        #scheduler.step()
 
     return total_loss.avg, depth_loss.avg, segment_loss.avg, model
 
