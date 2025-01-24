@@ -36,7 +36,6 @@ def get_args_parser():
                         help='gradient clipping max norm')
     parser.add_argument('--lambd', default=0,type=float) # coeffitiont of Segmentation Loss
     parser.add_argument('--sgd', action='store_true')
-
     # [depth or full], depth: Only height head, full:height+Segmentation head
     parser.add_argument('--option', default='full', type=str) 
     # [mit, conv, fused], Encoder type, mit: Hierarchical Vision transformers, conv: Resnet , Fused:mit+conv
@@ -58,13 +57,13 @@ def get_args_parser():
 
     # dataset parameters
     parser.add_argument('--dataset_name', default='DFC2023') #voxdata_coco  scenecad stru3d
-    parser.add_argument('--train_dir', default='path_to_train_data_folder', type=str) #dfc2023/train/
-    parser.add_argument('--val_dir', default='path_to_validation_data_folder', type=str) #dfc2023/validation/
-
+    parser.add_argument('--train_dir', default='path_to_train_dataset/', type=str) #dfc2023/train/
+    parser.add_argument('--val_dir', default='path_to_validation_dataset/', type=str) #dfc2023/validation/
+    parser.add_argument('--mit_ckpt_path', default='path_to_mit_b4.pth', type=str)
     parser.add_argument('--output_dir', default='output',
                         help='path where to save, empty for no saving')
     
-    parser.add_argument('--device', default='cuda:1',
+    parser.add_argument('--device', default='cpu',
                         help='device to use for training / testing')
     parser.add_argument('--seed', default=42, type=int)
     parser.add_argument('--resume', default='', help='resume from checkpoint')
@@ -75,8 +74,8 @@ def get_args_parser():
     parser.add_argument('--exp_name', default=True, type=bool)
     parser.add_argument('--save_model', default=True, type=bool)
     parser.add_argument('--save_results', default=True, type=bool)
-    parser.add_argument('--max_depth_eval', default=185, type=int)
-    parser.add_argument('--min_depth_eval', default=1e-4, type=float)
+    parser.add_argument('--max_height_eval', default=185, type=int)
+    parser.add_argument('--min_height_eval', default=1e-4, type=float)
     parser.add_argument('--dataset', default="local", type=bool)
     
     return parser
@@ -101,10 +100,10 @@ def main(args):
     train_dir = args.train_dir
     val_dir = args.val_dir
 
-    train_data = LocalDataset(train_dir)
+    train_data = LocalDataset(train_dir, args=args)
     train_loader = DataLoader(train_data, batch_size=args.batch_size,shuffle=True)
 
-    val_data = LocalDataset(val_dir)
+    val_data = LocalDataset(val_dir, args=args)
     val_loader = DataLoader(val_data, batch_size=args.batch_size,shuffle=True)
 
     dataloaders = {
@@ -122,10 +121,10 @@ def main(args):
         param.requires_grad = True
 
     criterion_d = DepthSegLoss(args=args)
-    #criterion_s = nn.CrossEntropyLoss()
+
     optimizer_d = optim.Adam(model.parameters(), args.lr)
 
-    schedular = optim.lr_scheduler.StepLR(optimizer_d)
+    #schedular = optim.lr_scheduler.StepLR(optimizer_d)
 
     model.to(device)
 
@@ -138,7 +137,7 @@ def main(args):
     for epoch in range(1, args.epochs + 1):
         print('\nEpoch: %03d - %03d' % (epoch, args.epochs))
         total_loss, depth_loss,segment_loss,model = train(train_loader, model, criterion_d, optimizer_d=optimizer_d,
-                                scheduler = schedular, 
+                                #scheduler = schedular, 
                             device=device, epoch=epoch, args=args,option=args.option)
         train_log_stats = { "train/total_loss": total_loss,
                             "train/depth_loss": depth_loss,
