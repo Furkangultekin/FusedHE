@@ -172,11 +172,25 @@ class FeatureFusion(nn.Module):
                       out_channels=out_channel, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(out_channel),
             nn.ReLU())
+        
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(in_channels=int(out_channel*2),
+                      out_channels=int(out_channel*2), kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(int(out_channel*2)),
+            nn.ReLU())
+
+        self.conv4 = nn.Sequential(
+            nn.Conv2d(in_channels=int(out_channel*2),
+                      out_channels=int(out_channel*2), kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(int(out_channel*2)),
+            nn.ReLU())
 
     def forward(self, x_mit, x_cnn):
         x_cnn = self.conv1(x_cnn)
         x_cnn = self.conv2(x_cnn)
         x = torch.cat((x_mit,x_cnn),1)
+        x = self.conv3(x)
+        x = self.conv4(x)
         return x
     
 
