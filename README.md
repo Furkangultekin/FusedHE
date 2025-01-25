@@ -91,7 +91,25 @@ FusedHE is a deep learning model designed to estimate height information from si
   python .\inference.py --ckpt_path path/to/FusedSegHE.ckpt
   ```
 
-## Parameters for training
+## Important Parameters
+### Training:
+    During training consider the following argument check and
+  -  `--lr`: learning rate
+  -  `--batch_size`: batch size
+  -  `--epochs` : epochs
+  -  `--lamd` : Coefficient for segmentation loss in Total loss of the FusedSeg-HE model. `lamd=0` segmentation head will not effect on estimated height. Recommended value `lamd=0.005`
+  -  `--option` : [depth or full], Head option to define model. `option=depth` --> The model use only height head. `option=full` --> The model use height head and segment head together.
+  -  `--enc_opt` : [mit, conv, fused], Defining encoder type, `enc_opt=conv` --> ResNet-101 encoder, `enc_opt=mit` --> MiT encoder, `enc_opt=fused` --> ResNet-101 + MiT
+  -  `--pre_trained` : [True, False], encoder pre-trained parameters
+  -  `--num_classes` : for segmentation head
+  -  `--in_channel_decoderb` : list of decoder blocks input size. `enc_opt=mit` or `enc_opt=fused` --> [1024, 640, 256] , `enc_opt=conv` --> [1024, 512, 256].
+  -  `--out_channel_decoderb` : list of decoder blocks output size. `enc_opt=mit` or `enc_opt=fused` --> [640, 256, 128] , `enc_opt=conv` --> [512, 256, 128].
+  -  `--train_dir` : Training dataset directory path
+  -  `--val_dir` : Validation dataset directory path
+  -  `--mit_ckpt_path` : `mit_b4.pth` parameters file path
+  -  `--max_height_eval` : Maximum height value that ground truth nDSM data contain.
+  -  `--min_height_eval` : Minimum height value that gorund truth nDSM data contain.
+
 
 
 
