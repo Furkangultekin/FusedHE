@@ -6,15 +6,25 @@
 
 FusedHE is a deep learning model designed to estimate height information from single (monoscopic) satellite images. By integrating convolutional neural networks (CNNs) with Vision Transformer (ViT) encoders, FusedHE aims to enhance the accuracy of height estimations in remote sensing applications.
 
+![3d_barca](https://github.com/user-attachments/assets/124da4c4-8931-4783-a90c-e812d13e2939)
+![3d_2](https://github.com/user-attachments/assets/3633da4e-32c3-4854-a0d2-fffd5caa4355)
+
 ## Features
 
 - **Hybrid Architecture**: Combines the strengths of CNNs and Vision Transformers to capture both local and global features from satellite imagery.
 - **Monoscopic Input**: Processes single-view satellite images, eliminating the need for stereoscopic data.
 - **Height Estimation**: Outputs precise height predictions, beneficial for various geospatial analyses.
 
+## MODELS:
+  The following models can be used for training with this repository:
+  - **CNN**: Convolutional Neural Network height estimation algorithm using [ResNet-101](https://arxiv.org/abs/1512.03385) encoder.
+  - **MiT**: Hierarchical Vision Transformers from [SegFormer](https://arxiv.org/abs/2105.15203) paper for height estimation using MiT (Mixed Transformers) encoder.
+  - **[Fused-HE](https://open.metu.edu.tr/handle/11511/108758)**: Encoder created by the fusion of convolutional and vision transformer encoders.
+  - **[FusedSeg-HE](https://open.metu.edu.tr/handle/11511/108758)**: Fused encoder with additional segment head to increase the accuracy.
+
 ## Installation
 
-### 1.Clone the Repository:
+### 1. Clone the Repository:
   ```bash
   git clone https://github.com/Furkangultekin/FusedHE.git
   cd FusedHE
