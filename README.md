@@ -69,8 +69,8 @@ FusedHE is a deep learning model designed to estimate height information from si
     > **Naming Convention**: Each input image in the `rgb/` folder must have a corresponding ground truth file in the `dsm/` folder with the same name (e.g., `image_001.tif` in `rgb/` matches `image_001.tif` in `dsm/`).
 
 ### 2. Download the checkpoints:
-   
-    You will need to download the following model checkpoints to run the project:
+
+  You will need to download the following model checkpoints to run the project:
   - **MIT Pretrained Parameters**: `mit_b4.pth` (used for the Vision Transformer encoder, can be used during training)
   - **Trained Parameters on DataFusion Contest 2023 Dataset**: `FusedSeg-HE.ckpt` (FusedSeg-HE parameters, can be used for inference data)
 
