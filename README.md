@@ -93,7 +93,8 @@ FusedHE is a deep learning model designed to estimate height information from si
 
 ## Important Parameters
 ### Training:
-    During training consider the following argument check and
+
+  Check the following arguments on `main.py`:
   -  `--lr`: learning rate
   -  `--batch_size`: batch size
   -  `--epochs` : epochs
@@ -109,6 +110,13 @@ FusedHE is a deep learning model designed to estimate height information from si
   -  `--mit_ckpt_path` : `mit_b4.pth` parameters file path
   -  `--max_height_eval` : Maximum height value that ground truth nDSM data contain.
   -  `--min_height_eval` : Minimum height value that gorund truth nDSM data contain.
+
+### Inference:
+  Check the following arguments on `inference.py`:
+  - `--folder_path` : inference data folder path.
+  - `--ckpt_path` : Path to .ckpt ex. FusedSegHE.ckpt
+  - `--output_dir` : Inference data result dir.
+    
 
 
 
