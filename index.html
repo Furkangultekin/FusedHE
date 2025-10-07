@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FusedHE — Fusing CNNs and ViTs for Height Estimation</title>
+  <meta name="description" content="Fused-HE: Fusing Convolution and Vision Transformers Encoder for Object Height Estimation from Monocular Satellite and Aerial Images." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0b0c;
+      --card:#121214;
+      --muted:#9aa0a6;
+      --text:#e8eaed;
+      --accent:#ffffff;
+      --border:#202124;
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.6}
+    a{color:inherit}
+    .container{max-width:1080px;margin:0 auto;padding:24px}
+    header{
+      padding:48px 0 24px;
+      text-align:center;
+    }
+    h1{font-size:clamp(28px,4vw,40px);margin:0 0 8px}
+    .subtitle{color:var(--muted);max-width:900px;margin:0 auto}
+    .button-bar{margin:24px 0 0;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+    .btn{
+      background:#000; color:#fff; padding:12px 22px; border-radius:25px;
+      text-decoration:none; font-weight:600; display:inline-flex; gap:8px; align-items:center;
+      border:2px solid #000; transition:all .2s ease; letter-spacing:.2px
+    }
+    .btn:hover{background:#fff;color:#000}
+    .grid{display:grid;gap:16px}
+    .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+    @media (max-width:800px){.grid.cols-2{grid-template-columns:1fr}}
+    .card{
+      background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+      padding:20px;
+    }
+    .section-title{font-size:22px;margin:6px 0 12px}
+    .muted{color:var(--muted)}
+    .hero-media{
+      margin:28px auto 8px;display:grid;gap:12px;grid-template-columns:1fr 1fr;max-width:980px
+    }
+    @media (max-width:900px){.hero-media{grid-template-columns:1fr}}
+    .media img{
+      width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--border);
+    }
+    pre{
+      background:#0f1115;border:1px solid var(--border);border-radius:12px;padding:14px;overflow:auto
+    }
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: .95rem;}
+    ul{margin:8px 0 0 18px}
+    .toc{display:flex;flex-wrap:wrap;gap:8px}
+    .toc a{padding:6px 10px;border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--muted)}
+    .toc a:hover{color:var(--text);border-color:#2b2c2f}
+    footer{padding:36px 0;color:var(--muted);text-align:center}
+    .badge{display:inline-block;padding:2px 8px;border:1px solid var(--border);border-radius:999px;font-size:12px;margin-left:6px;color:var(--muted)}
+    .callout{border-left:3px solid #2b2c2f;padding:10px 14px;background:#0f1012;border-radius:8px;margin-top:8px;color:#cbd1d8}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>FusedHE <span class="badge">Monocular Height Estimation</span></h1>
+      <p class="subtitle">
+        <strong>Fused-HE: Fusing Convolution and Vision Transformers Encoder for Object Height Estimation from Monocular Satellite and Aerial Images</strong>
+      </p>
+
+      <div class="button-bar">
+        <!-- Bu linkleri kendi yol/URL'lerinle güncelle -->
+        <a class="btn" href="./assets/paper.pdf" target="_blank">📄 Paper</a>
+        <a class="btn" href="./assets/supplementary.zip" target="_blank">📚 Supplementary</a>
+        <a class="btn" href="https://github.com/Furkangultekin/FusedHE" target="_blank">💻 Code</a>
+        <a class="btn" href="./assets/poster.pdf" target="_blank">🖼 Poster</a>
+      </div>
+
+      <div class="hero-media">
+        <div class="media">
+          <img src="https://github.com/user-attachments/assets/124da4c4-8931-4783-a90c-e812d13e2939" alt="FusedHE 3D visualization 1" />
+        </div>
+        <div class="media">
+          <img src="https://github.com/user-attachments/assets/3633da4e-32c3-4854-a0d2-fffd5caa4355" alt="FusedHE 3D visualization 2" />
+        </div>
+      </div>
+
+      <div class="toc" aria-label="İçindekiler">
+        <a href="#overview">Overview</a>
+        <a href="#features">Features</a>
+        <a href="#models">Models</a>
+        <a href="#install">Installation</a>
+        <a href="#usage">Usage</a>
+        <a href="#training">Training</a>
+        <a href="#inference">Inference</a>
+        <a href="#params">Important Parameters</a>
+      </div>
+    </header>
+
+    <main class="grid cols-2">
+      <!-- Overview -->
+      <section id="overview" class="card">
+        <h2 class="section-title">Overview</h2>
+        <p>
+          FusedHE, tek görüntüden (monoscopic) yükseklik kestirimi için tasarlanmış bir derin öğrenme modelidir.
+          Konvolüsyonel sinir ağları (CNN) ile Vision Transformer (ViT) <em>encoder</em>larını birleştirerek uzaktan algılama uygulamalarında yükseklik kestirim doğruluğunu artırmayı hedefler.
+        </p>
+      </section>
+
+      <!-- Features -->
+      <section id="features" class="card">
+        <h2 class="section-title">Features</h2>
+        <ul>
+          <li><strong>Hybrid Architecture:</strong> CNN’lerin yerel özellik çıkarımı ile ViT’lerin küresel bağlamını birleştirir.</li>
+          <li><strong>Monoscopic Input:</strong> Tek görüntüden çalışır; stereo veriye ihtiyaç duymaz.</li>
+          <li><strong>Height Estimation:</strong> Çeşitli CBS/uzaktan algılama analizleri için hassas yükseklik tahmini üretir.</li>
+        </ul>
+      </section>
+
+      <!-- Models -->
+      <section id="models" class="card">
+        <h2 class="section-title">Models</h2>
+        <p>Bu depo ile aşağıdaki modelleri eğitebilirsiniz:</p>
+        <ul>
+          <li><strong>CNN:</strong> <a href="https://arxiv.org/abs/1512.03385" target="_blank">ResNet-101</a> encoder’lı yükseklik kestirimi.</li>
+          <li><strong>MiT:</strong> <a href="https://arxiv.org/abs/2105.15203" target="_blank">SegFormer</a>’daki hiyerarşik Vision Transformer (MiT) encoder’ı ile yükseklik kestirimi.</li>
+          <li><strong>Fused-HE:</strong> Konvolüsyonel ve transformer encoder’larının füzyonu. <a href="https://open.metu.edu.tr/handle/11511/108758" target="_blank">[link]</a></li>
+          <li><strong>FusedSeg-HE:</strong> Ek segmentasyon başlığı ile daha yüksek doğruluk. <a href="https://open.metu.edu.tr/handle/11511/108758" target="_blank">[link]</a></li>
+        </ul>
+      </section>
+
+      <!-- Installation -->
+      <section id="install" class="card">
+        <h2 class="section-title">Installation</h2>
+        <p>Önerilen Python: <strong>3.10.11</strong></p>
+        <pre><code># 1) Depoyu klonla
+git clone https://github.com/Furkangultekin/FusedHE.git
+cd FusedHE
+
+# 2) Bağımlılıkları kur
+pip install -r requirements.txt
+</code></pre>
+      </section>
+
+      <!-- Usage -->
+      <section id="usage" class="card">
+        <h2 class="section-title">Usage</h2>
+        <p>Veri hazırlama — 512×512 tekil görüntüler ve karşılık gelen nDSM yerleştirimi:</p>
+        <pre><code>.
+├── dfc2023/
+│   ├── train/
+│   │   ├── rgb/            # giriş görüntüler
+│   │   └── dsm/            # yer gerçeği nDSM
+│   └── validation/
+│       ├── rgb/
+│       └── dsm/
+</code></pre>
+        <div class="callout">
+          <strong>Not:</strong> Giriş klasörü adı <code>rgb</code>, yer gerçeği klasörü adı <code>dsm</code> olmalı.
+          Dosya adları bire bir eşleşmelidir (örn. <code>rgb/image_001.tif</code> ↔ <code>dsm/image_001.tif</code>).
+        </div>
+      </section>
+
+      <!-- Checkpoints -->
+      <section class="card">
+        <h2 class="section-title">Checkpoints</h2>
+        <ul>
+          <li><strong>MiT Pretrained:</strong> <code>mit_b4.pth</code> (encoder için)</li>
+          <li><strong>FusedSeg-HE (DFC2023):</strong> <code>FusedSeg-HE.ckpt</code> (çıkarım için)</li>
+        </ul>
+        <p>İndirme: <a href="https://drive.google.com/drive/folders/1EwmFM0zHENQGPiMemXfe9W97qUKsyLhG?usp=drive_link" target="_blank">Google Drive klasörü</a></p>
+      </section>
+
+      <!-- Training -->
+      <section id="training" class="card">
+        <h2 class="section-title">Training</h2>
+        <pre><code>python main.py \
+  --train_dir /path/to/train \
+  --val_dir /path/to/validation \
+  --mit_ckpt_path /path/to/mit_b4.pth
+</code></pre>
+        <p class="muted">Parametreleri veri setinize göre ayarlayın.</p>
+      </section>
+
+      <!-- Inference -->
+      <section id="inference" class="card">
+        <h2 class="section-title">Inference</h2>
+        <pre><code>python inference.py \
+  --ckpt_path /path/to/FusedSegHE.ckpt \
+  --folder_path /path/to/inference_data \
+  --output_dir /path/to/output
+</code></pre>
+      </section>
+
+      <!-- Important Parameters -->
+      <section id="params" class="card">
+        <h2 class="section-title">Important Parameters</h2>
+        <h3>Training (main.py)</h3>
+        <ul>
+          <li><code>--lr</code>, <code>--batch_size</code>, <code>--epochs</code></li>
+          <li><code>--lamd</code> — FusedSeg-HE toplam kaybında segmentasyon katsayısı (öneri: <code>0.005</code>)</li>
+          <li><code>--option</code> — <code>depth</code> (sadece height) / <code>full</code> (height + segment)</li>
+          <li><code>--enc_opt</code> — <code>conv</code> (ResNet-101) / <code>mit</code> (MiT) / <code>fused</code> (ResNet-101 + MiT)</li>
+          <li><code>--pre_trained</code> — encoder ön-eğitimli parametre kullanımı</li>
+          <li><code>--num_classes</code> — segment başlığı sınıf sayısı</li>
+          <li><code>--in_channel_decoderb</code> — <code>mit/fused</code>: <code>[1024,640,256]</code> · <code>conv</code>: <code>[1024,512,256]</code></li>
+          <li><code>--out_channel_decoderb</code> — <code>mit/fused</code>: <code>[640,256,128]</code> · <code>conv</code>: <code>[512,256,128]</code></li>
+          <li><code>--train_dir</code>, <code>--val_dir</code>, <code>--mit_ckpt_path</code></li>
+          <li><code>--max_height_eval</code>, <code>--min_height_eval</code></li>
+        </ul>
+        <h3>Inference (inference.py)</h3>
+        <ul>
+          <li><code>--folder_path</code> — giriş klasörü</li>
+          <li><code>--ckpt_path</code> — <code>.ckpt</code> dosya yolu</li>
+          <li><code>--output_dir</code> — çıktı klasörü</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>© <span id="y"></span> FusedHE — Monocular Height Estimation</p>
+    </footer>
+  </div>
+
+  <script>
+    // Yıl güncelle
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
