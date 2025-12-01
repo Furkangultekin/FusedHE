@@ -1,21 +1,47 @@
-MIT License
+Short Non-Commercial License (Compatible with NVIDIA SegFormer Terms)
 
-Copyright (c) 2025 fgultekinfg
+1. Scope
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This repository contains:
+(a) original code created by Furkan Gültekin, and
+(b) components derived from or based on NVIDIA’s SegFormer Work, which is licensed under the NVIDIA Source Code License.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. Redistribution Requirements (per NVIDIA 3.1)
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Any redistribution of files originating from NVIDIA’s SegFormer Work must:
+-Be distributed under the same NVIDIA Source Code License, 
+-Include a complete,unmodified copy of that license, and
+-Retain all copyright and attribution notices.
+
+3. Derivative Works (per NVIDIA 3.2)
+
+You may create derivative works and apply your own additional terms only if:
+
+-Your terms include the same Non-Commercial Use Limitation defined in NVIDIA Segformer license Section 3.3, and
+-You clearly identify which parts are your derivative works.
+
+NVIDIA’s original Work will always remain under the NVIDIA Source Code License.
+
+4. Non-Commercial Use Limitation (per NVIDIA 3.3)
+
+The NVIDIA SegFormer Work and any derivative works built upon it may be used for research or evaluation purposes only.
+
+Commercial use is strictly prohibited, except by NVIDIA and its affiliates.
+
+This restriction applies to:
+
+-Modified versions of the NVIDIA Work
+-Models trained using the NVIDIA Work
+-Derivative algorithms or pipelines
+-Any software that incorporates NVIDIA Work
+
+5. License on Original Code
+
+All original code authored by Furkan Gültekin in this repository is released under the following terms:
+
+-Free to use for research and evaluation only
+
+6. Warranty & Liability Disclaimer
+
+The software is provided “AS IS”, without warranty of any kind.
+The author is not liable for any damages arising from the use of this software.
